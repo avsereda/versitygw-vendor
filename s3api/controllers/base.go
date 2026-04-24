@@ -234,11 +234,19 @@ func ProcessController(ctx *fiber.Ctx, controller Controller, s3action string, s
 	// the event has already occurred. This means the S3 event must be sent,
 	// even if unexpected issues arise while further parsing the response payload.
 	if svc.EventSender != nil && opts.EventName != "" {
+		var objectETag, versionId string
+		if opts.ObjectETag != nil {
+			objectETag = *opts.ObjectETag
+		}
+		if opts.VersionId != nil {
+			versionId = *opts.VersionId
+		}
+
 		svc.EventSender.SendEvent(ctx, s3event.EventMeta{
 			BucketOwner: opts.BucketOwner,
 			ObjectSize:  opts.ObjectSize,
-			ObjectETag:  opts.ObjectETag,
-			VersionId:   opts.VersionId,
+			ObjectETag:  objectETag,
+			VersionId:   versionId,
 			EventName:   opts.EventName,
 		})
 	}

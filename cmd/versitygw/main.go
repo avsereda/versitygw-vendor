@@ -40,72 +40,42 @@ import (
 )
 
 var (
-	ports                                  []string
-	admPorts                               []string
-	rootUserAccess                         string
-	rootUserSecret                         string
-	region                                 string
-	maxConnections, maxRequests            int
-	adminMaxConnections, adminMaxRequests  int
-	corsAllowOrigin                        string
-	admCertFile, admKeyFile                string
-	certFile, keyFile                      string
-	kafkaURL, kafkaTopic, kafkaKey         string
-	natsURL, natsTopic                     string
-	rabbitmqURL, rabbitmqExchange          string
-	rabbitmqRoutingKey                     string
-	eventWebhookURL                        string
-	eventConfigFilePath                    string
-	logWebhookURL, accessLog               string
-	adminLogFile                           string
-	healthPath                             string
-	virtualDomain                          string
-	debug                                  bool
-	keepAlive                              bool
-	pprof                                  string
-	quiet                                  bool
-	readonly                               bool
-	disableStrictBucketNames               bool
-	iamDir                                 string
-	ldapURL, ldapBindDN, ldapPassword      string
-	ldapQueryBase, ldapObjClasses          string
-	ldapAccessAtr, ldapSecAtr, ldapRoleAtr string
-	ldapUserIdAtr, ldapGroupIdAtr          string
-	ldapProjectIdAtr                       string
-	ldapTLSSkipVerify                      bool
-	vaultEndpointURL, vaultNamespace       string
-	vaultSecretStoragePath                 string
-	vaultSecretStorageNamespace            string
-	vaultAuthMethod, vaultAuthNamespace    string
-	vaultMountPath                         string
-	vaultRootToken, vaultRoleId            string
-	vaultRoleSecret, vaultServerCert       string
-	vaultClientCert, vaultClientCertKey    string
-	s3IamAccess, s3IamSecret               string
-	s3IamRegion, s3IamBucket               string
-	s3IamEndpoint                          string
-	s3IamSslNoVerify                       bool
-	iamCacheDisable                        bool
-	iamCacheTTL                            int
-	iamCachePrune                          int
-	metricsService                         string
-	statsdServers                          string
-	dogstatsServers                        string
-	ipaHost, ipaVaultName                  string
-	ipaUser, ipaPassword                   string
-	ipaInsecure                            bool
-	iamDebug                               bool
-	webuiPorts                             []string
-	webuiCertFile, webuiKeyFile            string
-	webuiNoTLS                             bool
-	webuiGateways                          []string
-	webuiAdminGateways                     []string
-	webuiPathPrefix                        string
-	webuiS3Prefix                          string
-	disableACLs                            bool
-	mpMaxParts                             int
-	copyObjectThreshold                    int64
-	socketPerm                             string
+	ports                                 []string
+	admPorts                              []string
+	rootUserAccess                        string
+	rootUserSecret                        string
+	region                                string
+	maxConnections, maxRequests           int
+	adminMaxConnections, adminMaxRequests int
+	corsAllowOrigin                       string
+	admCertFile, admKeyFile               string
+	certFile, keyFile                     string
+	accessLog                             string
+	adminLogFile                          string
+	healthPath                            string
+	virtualDomain                         string
+	debug                                 bool
+	keepAlive                             bool
+	pprof                                 string
+	quiet                                 bool
+	readonly                              bool
+	disableStrictBucketNames              bool
+	iamDir                                string
+	metricsService                        string
+	statsdServers                         string
+	dogstatsServers                       string
+	iamDebug                              bool
+	webuiPorts                            []string
+	webuiCertFile, webuiKeyFile           string
+	webuiNoTLS                            bool
+	webuiGateways                         []string
+	webuiAdminGateways                    []string
+	webuiPathPrefix                       string
+	webuiS3Prefix                         string
+	disableACLs                           bool
+	mpMaxParts                            int
+	copyObjectThreshold                   int64
+	socketPerm                            string
 )
 
 var (
@@ -124,12 +94,7 @@ func main() {
 
 	app.Commands = []*cli.Command{
 		posixCommand(),
-		scoutfsCommand(),
-		s3Command(),
-		azureCommand(),
-		pluginCommand(),
 		adminCommand(),
-		testCommand(),
 		utilsCommand(),
 	}
 
@@ -394,293 +359,10 @@ func initFlags() []cli.Flag {
 			Destination: &adminLogFile,
 		},
 		&cli.StringFlag{
-			Name:        "log-webhook-url",
-			Usage:       "webhook url to send the audit logs",
-			EnvVars:     []string{"WEBHOOK", "VGW_LOG_WEBHOOK_URL"},
-			Destination: &logWebhookURL,
-		},
-		&cli.StringFlag{
-			Name:        "event-kafka-url",
-			Usage:       "kafka server url to send the bucket notifications.",
-			EnvVars:     []string{"VGW_EVENT_KAFKA_URL"},
-			Destination: &kafkaURL,
-			Aliases:     []string{"eku"},
-		},
-		&cli.StringFlag{
-			Name:        "event-kafka-topic",
-			Usage:       "kafka server pub-sub topic to send the bucket notifications to",
-			EnvVars:     []string{"VGW_EVENT_KAFKA_TOPIC"},
-			Destination: &kafkaTopic,
-			Aliases:     []string{"ekt"},
-		},
-		&cli.StringFlag{
-			Name:        "event-kafka-key",
-			Usage:       "kafka server put-sub topic key to send the bucket notifications to",
-			EnvVars:     []string{"VGW_EVENT_KAFKA_KEY"},
-			Destination: &kafkaKey,
-			Aliases:     []string{"ekk"},
-		},
-		&cli.StringFlag{
-			Name:        "event-nats-url",
-			Usage:       "nats server url to send the bucket notifications",
-			EnvVars:     []string{"VGW_EVENT_NATS_URL"},
-			Destination: &natsURL,
-			Aliases:     []string{"enu"},
-		},
-		&cli.StringFlag{
-			Name:        "event-nats-topic",
-			Usage:       "nats server pub-sub topic to send the bucket notifications to",
-			EnvVars:     []string{"VGW_EVENT_NATS_TOPIC"},
-			Destination: &natsTopic,
-			Aliases:     []string{"ent"},
-		},
-		&cli.StringFlag{
-			Name:        "event-rabbitmq-url",
-			Usage:       "rabbitmq server url to send the bucket notifications (amqp or amqps scheme)",
-			EnvVars:     []string{"VGW_EVENT_RABBITMQ_URL"},
-			Destination: &rabbitmqURL,
-			Aliases:     []string{"eru"},
-		},
-		&cli.StringFlag{
-			Name:        "event-rabbitmq-exchange",
-			Usage:       "rabbitmq exchange to publish bucket notifications to (blank for default)",
-			EnvVars:     []string{"VGW_EVENT_RABBITMQ_EXCHANGE"},
-			Destination: &rabbitmqExchange,
-			Aliases:     []string{"ere"},
-		},
-		&cli.StringFlag{
-			Name:        "event-rabbitmq-routing-key",
-			Usage:       "rabbitmq routing key when publishing bucket notifications (defaults to bucket name when blank)",
-			EnvVars:     []string{"VGW_EVENT_RABBITMQ_ROUTING_KEY"},
-			Destination: &rabbitmqRoutingKey,
-			Aliases:     []string{"errk"},
-		},
-		&cli.StringFlag{
-			Name:        "event-webhook-url",
-			Usage:       "webhook url to send bucket notifications",
-			EnvVars:     []string{"VGW_EVENT_WEBHOOK_URL"},
-			Destination: &eventWebhookURL,
-			Aliases:     []string{"ewu"},
-		},
-		&cli.StringFlag{
-			Name:        "event-filter",
-			Usage:       "bucket event notifications filters configuration file path",
-			EnvVars:     []string{"VGW_EVENT_FILTER"},
-			Destination: &eventConfigFilePath,
-			Aliases:     []string{"ef"},
-		},
-		&cli.StringFlag{
 			Name:        "iam-dir",
 			Usage:       "if defined, run internal iam service within this directory",
 			EnvVars:     []string{"VGW_IAM_DIR"},
 			Destination: &iamDir,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-url",
-			Usage:       "ldap server url to store iam data",
-			EnvVars:     []string{"VGW_IAM_LDAP_URL"},
-			Destination: &ldapURL,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-bind-dn",
-			Usage:       "ldap server binding dn, example: 'cn=admin,dc=example,dc=com'",
-			EnvVars:     []string{"VGW_IAM_LDAP_BIND_DN"},
-			Destination: &ldapBindDN,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-bind-pass",
-			Usage:       "ldap server user password",
-			EnvVars:     []string{"VGW_IAM_LDAP_BIND_PASS"},
-			Destination: &ldapPassword,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-query-base",
-			Usage:       "ldap server destination query, example: 'ou=iam,dc=example,dc=com'",
-			EnvVars:     []string{"VGW_IAM_LDAP_QUERY_BASE"},
-			Destination: &ldapQueryBase,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-object-classes",
-			Usage:       "ldap server object classes used to store the data. provide it as comma separated string, example: 'top,person'",
-			EnvVars:     []string{"VGW_IAM_LDAP_OBJECT_CLASSES"},
-			Destination: &ldapObjClasses,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-access-atr",
-			Usage:       "ldap server user access key id attribute name",
-			EnvVars:     []string{"VGW_IAM_LDAP_ACCESS_ATR"},
-			Destination: &ldapAccessAtr,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-secret-atr",
-			Usage:       "ldap server user secret access key attribute name",
-			EnvVars:     []string{"VGW_IAM_LDAP_SECRET_ATR"},
-			Destination: &ldapSecAtr,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-role-atr",
-			Usage:       "ldap server user role attribute name",
-			EnvVars:     []string{"VGW_IAM_LDAP_ROLE_ATR"},
-			Destination: &ldapRoleAtr,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-user-id-atr",
-			Usage:       "ldap server user id attribute name",
-			EnvVars:     []string{"VGW_IAM_LDAP_USER_ID_ATR"},
-			Destination: &ldapUserIdAtr,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-group-id-atr",
-			Usage:       "ldap server user group id attribute name",
-			EnvVars:     []string{"VGW_IAM_LDAP_GROUP_ID_ATR"},
-			Destination: &ldapGroupIdAtr,
-		},
-		&cli.StringFlag{
-			Name:        "iam-ldap-project-id-atr",
-			Usage:       "ldap server user project id attribute name",
-			EnvVars:     []string{"VGW_IAM_LDAP_PROJECT_ID_ATR"},
-			Destination: &ldapProjectIdAtr,
-		},
-		&cli.BoolFlag{
-			Name:        "iam-ldap-tls-skip-verify",
-			Usage:       "disable TLS certificate verification for LDAP connections (insecure, for self-signed certificates)",
-			EnvVars:     []string{"VGW_IAM_LDAP_TLS_SKIP_VERIFY"},
-			Destination: &ldapTLSSkipVerify,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-endpoint-url",
-			Usage:       "vault server url",
-			EnvVars:     []string{"VGW_IAM_VAULT_ENDPOINT_URL"},
-			Destination: &vaultEndpointURL,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-namespace",
-			Usage:       "vault server namespace",
-			EnvVars:     []string{"VGW_IAM_VAULT_NAMESPACE"},
-			Destination: &vaultNamespace,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-secret-storage-path",
-			Usage:       "vault server secret storage path",
-			EnvVars:     []string{"VGW_IAM_VAULT_SECRET_STORAGE_PATH"},
-			Destination: &vaultSecretStoragePath,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-secret-storage-namespace",
-			Usage:       "vault server secret storage namespace",
-			EnvVars:     []string{"VGW_IAM_VAULT_SECRET_STORAGE_NAMESPACE"},
-			Destination: &vaultSecretStorageNamespace,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-auth-method",
-			Usage:       "vault server auth method",
-			EnvVars:     []string{"VGW_IAM_VAULT_AUTH_METHOD"},
-			Destination: &vaultAuthMethod,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-auth-namespace",
-			Usage:       "vault server auth namespace",
-			EnvVars:     []string{"VGW_IAM_VAULT_AUTH_NAMESPACE"},
-			Destination: &vaultAuthNamespace,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-mount-path",
-			Usage:       "vault server mount path",
-			EnvVars:     []string{"VGW_IAM_VAULT_MOUNT_PATH"},
-			Destination: &vaultMountPath,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-root-token",
-			Usage:       "vault server root token",
-			EnvVars:     []string{"VGW_IAM_VAULT_ROOT_TOKEN"},
-			Destination: &vaultRootToken,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-role-id",
-			Usage:       "vault server user role id",
-			EnvVars:     []string{"VGW_IAM_VAULT_ROLE_ID"},
-			Destination: &vaultRoleId,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-role-secret",
-			Usage:       "vault server user role secret",
-			EnvVars:     []string{"VGW_IAM_VAULT_ROLE_SECRET"},
-			Destination: &vaultRoleSecret,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-server_cert",
-			Usage:       "vault server TLS certificate",
-			EnvVars:     []string{"VGW_IAM_VAULT_SERVER_CERT"},
-			Destination: &vaultServerCert,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-client_cert",
-			Usage:       "vault client TLS certificate",
-			EnvVars:     []string{"VGW_IAM_VAULT_CLIENT_CERT"},
-			Destination: &vaultClientCert,
-		},
-		&cli.StringFlag{
-			Name:        "iam-vault-client_cert_key",
-			Usage:       "vault client TLS certificate key",
-			EnvVars:     []string{"VGW_IAM_VAULT_CLIENT_CERT_KEY"},
-			Destination: &vaultClientCertKey,
-		},
-		&cli.StringFlag{
-			Name:        "s3-iam-access",
-			Usage:       "s3 IAM access key",
-			EnvVars:     []string{"VGW_S3_IAM_ACCESS_KEY"},
-			Destination: &s3IamAccess,
-		},
-		&cli.StringFlag{
-			Name:        "s3-iam-secret",
-			Usage:       "s3 IAM secret key",
-			EnvVars:     []string{"VGW_S3_IAM_SECRET_KEY"},
-			Destination: &s3IamSecret,
-		},
-		&cli.StringFlag{
-			Name:        "s3-iam-region",
-			Usage:       "s3 IAM region",
-			EnvVars:     []string{"VGW_S3_IAM_REGION"},
-			Destination: &s3IamRegion,
-			Value:       "us-east-1",
-		},
-		&cli.StringFlag{
-			Name:        "s3-iam-bucket",
-			Usage:       "s3 IAM bucket",
-			EnvVars:     []string{"VGW_S3_IAM_BUCKET"},
-			Destination: &s3IamBucket,
-		},
-		&cli.StringFlag{
-			Name:        "s3-iam-endpoint",
-			Usage:       "s3 IAM endpoint",
-			EnvVars:     []string{"VGW_S3_IAM_ENDPOINT"},
-			Destination: &s3IamEndpoint,
-		},
-		&cli.BoolFlag{
-			Name:        "s3-iam-noverify",
-			Usage:       "s3 IAM disable ssl verification",
-			EnvVars:     []string{"VGW_S3_IAM_NO_VERIFY"},
-			Destination: &s3IamSslNoVerify,
-		},
-		&cli.BoolFlag{
-			Name:        "iam-cache-disable",
-			Usage:       "disable local iam cache",
-			EnvVars:     []string{"VGW_IAM_CACHE_DISABLE"},
-			Destination: &iamCacheDisable,
-		},
-		&cli.IntFlag{
-			Name:        "iam-cache-ttl",
-			Usage:       "local iam cache entry ttl (seconds)",
-			EnvVars:     []string{"VGW_IAM_CACHE_TTL"},
-			Value:       120,
-			Destination: &iamCacheTTL,
-		},
-		&cli.IntFlag{
-			Name:        "iam-cache-prune",
-			Usage:       "local iam cache cleanup interval (seconds)",
-			EnvVars:     []string{"VGW_IAM_CACHE_PRUNE"},
-			Value:       3600,
-			Destination: &iamCachePrune,
 		},
 		&cli.BoolFlag{
 			Name:        "iam-debug",
@@ -728,36 +410,6 @@ func initFlags() []cli.Flag {
 			EnvVars:     []string{"VGW_METRICS_DOGSTATS_SERVERS"},
 			Aliases:     []string{"mds"},
 			Destination: &dogstatsServers,
-		},
-		&cli.StringFlag{
-			Name:        "ipa-host",
-			Usage:       "FreeIPA server url e.g. https://ipa.example.test",
-			EnvVars:     []string{"VGW_IPA_HOST"},
-			Destination: &ipaHost,
-		},
-		&cli.StringFlag{
-			Name:        "ipa-vault-name",
-			Usage:       "A name of the user vault containing their secret",
-			EnvVars:     []string{"VGW_IPA_VAULT_NAME"},
-			Destination: &ipaVaultName,
-		},
-		&cli.StringFlag{
-			Name:        "ipa-user",
-			Usage:       "Username used to connect to FreeIPA (requires permissions to read user vault contents)",
-			EnvVars:     []string{"VGW_IPA_USER"},
-			Destination: &ipaUser,
-		},
-		&cli.StringFlag{
-			Name:        "ipa-password",
-			Usage:       "Password of the user used to connect to FreeIPA",
-			EnvVars:     []string{"VGW_IPA_PASSWORD"},
-			Destination: &ipaPassword,
-		},
-		&cli.BoolFlag{
-			Name:        "ipa-insecure",
-			Usage:       "Disable verify TLS certificate of FreeIPA server",
-			EnvVars:     []string{"VGW_IPA_INSECURE"},
-			Destination: &ipaInsecure,
 		},
 		&cli.IntFlag{
 			Name:        "mp-max-parts",
@@ -939,46 +591,7 @@ func runGateway(ctx context.Context, be backend.Backend) error {
 			Secret: rootUserSecret,
 			Role:   auth.RoleAdmin,
 		},
-		Dir:                         iamDir,
-		LDAPServerURL:               ldapURL,
-		LDAPBindDN:                  ldapBindDN,
-		LDAPPassword:                ldapPassword,
-		LDAPQueryBase:               ldapQueryBase,
-		LDAPObjClasses:              ldapObjClasses,
-		LDAPAccessAtr:               ldapAccessAtr,
-		LDAPSecretAtr:               ldapSecAtr,
-		LDAPRoleAtr:                 ldapRoleAtr,
-		LDAPUserIdAtr:               ldapUserIdAtr,
-		LDAPGroupIdAtr:              ldapGroupIdAtr,
-		LDAPProjectIdAtr:            ldapProjectIdAtr,
-		LDAPTLSSkipVerify:           ldapTLSSkipVerify,
-		VaultEndpointURL:            vaultEndpointURL,
-		VaultNamespace:              vaultNamespace,
-		VaultSecretStoragePath:      vaultSecretStoragePath,
-		VaultSecretStorageNamespace: vaultSecretStorageNamespace,
-		VaultAuthMethod:             vaultAuthMethod,
-		VaultAuthNamespace:          vaultAuthNamespace,
-		VaultMountPath:              vaultMountPath,
-		VaultRootToken:              vaultRootToken,
-		VaultRoleId:                 vaultRoleId,
-		VaultRoleSecret:             vaultRoleSecret,
-		VaultServerCert:             vaultServerCert,
-		VaultClientCert:             vaultClientCert,
-		VaultClientCertKey:          vaultClientCertKey,
-		S3Access:                    s3IamAccess,
-		S3Secret:                    s3IamSecret,
-		S3Region:                    s3IamRegion,
-		S3Bucket:                    s3IamBucket,
-		S3Endpoint:                  s3IamEndpoint,
-		S3DisableSSlVerfiy:          s3IamSslNoVerify,
-		CacheDisable:                iamCacheDisable,
-		CacheTTL:                    iamCacheTTL,
-		CachePrune:                  iamCachePrune,
-		IpaHost:                     ipaHost,
-		IpaVaultName:                ipaVaultName,
-		IpaUser:                     ipaUser,
-		IpaPassword:                 ipaPassword,
-		IpaInsecure:                 ipaInsecure,
+		Dir: iamDir,
 	})
 	if err != nil {
 		return fmt.Errorf("setup iam: %w", err)
@@ -986,7 +599,6 @@ func runGateway(ctx context.Context, be backend.Backend) error {
 
 	loggers, err := s3log.InitLogger(&s3log.LogConfig{
 		LogFile:      accessLog,
-		WebhookURL:   logWebhookURL,
 		AdminLogFile: adminLogFile,
 	})
 	if err != nil {
@@ -1002,21 +614,7 @@ func runGateway(ctx context.Context, be backend.Backend) error {
 		return fmt.Errorf("init metrics manager: %w", err)
 	}
 
-	evSender, err := s3event.InitEventSender(&s3event.EventConfig{
-		KafkaURL:             kafkaURL,
-		KafkaTopic:           kafkaTopic,
-		KafkaTopicKey:        kafkaKey,
-		NatsURL:              natsURL,
-		NatsTopic:            natsTopic,
-		RabbitmqURL:          rabbitmqURL,
-		RabbitmqExchange:     rabbitmqExchange,
-		RabbitmqRoutingKey:   rabbitmqRoutingKey,
-		WebhookURL:           eventWebhookURL,
-		FilterConfigFilePath: eventConfigFilePath,
-	})
-	if err != nil {
-		return fmt.Errorf("init bucket event notifications: %w", err)
-	}
+	evSender := &s3event.NullEventSender{}
 
 	if webuiS3Prefix != "" {
 		s3SSLEnabled := certFile != ""

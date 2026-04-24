@@ -44,7 +44,6 @@ import (
 	"github.com/versity/versitygw/s3api/utils"
 	"github.com/versity/versitygw/s3err"
 	"github.com/versity/versitygw/s3response"
-	"golang.org/x/sync/semaphore"
 )
 
 type Posix struct {
@@ -90,14 +89,6 @@ type Posix struct {
 	// enable posix level bucket name validations, not needed if the
 	// frontend handlers are already validating bucket names
 	validateBucketName bool
-
-	// actionLimiter limits the number of concurrently running POSIX actions.
-	// The primary goal is to bound OS thread growth: when goroutines block in
-	// filesystem syscalls, the Go scheduler may spawn additional OS threads to
-	// keep other goroutines runnable. Since nearly all POSIX actions eventually
-	// execute blocking syscalls (stat, readdir, xattr, open, etc.), this limiter
-	// constrains parallelism to prevent excessive thread creation under load.
-	actionLimiter *semaphore.Weighted
 
 	// copyObjectThreshold is the maximum allowed size (in bytes) for a copy
 	// source object. Requests to copy objects larger than this value are
@@ -246,7 +237,6 @@ func New(rootdir string, meta meta.MetadataStorer, opts PosixOpts) (*Posix, erro
 		forceNoTmpFile:       opts.ForceNoTmpFile,
 		forceNoCopyFileRange: opts.ForceNoCopyFileRange,
 		validateBucketName:   opts.ValidateBucketNames,
-		actionLimiter:        semaphore.NewWeighted(int64(concurrencyOrDefault(opts.Concurrency))),
 		copyObjectThreshold:  opts.CopyObjectThreshold,
 	}, nil
 }
@@ -334,12 +324,7 @@ func (p *Posix) acquireActionSlot(ctx context.Context) (func(), error) {
 		return func() {}, nil
 	}
 
-	if err := p.actionLimiter.Acquire(ctx, 1); err != nil {
-		return nil, err
-	}
-
 	return func() {
-		p.actionLimiter.Release(1)
 	}, nil
 }
 

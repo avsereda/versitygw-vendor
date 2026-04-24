@@ -23,7 +23,7 @@ import (
 	"github.com/versity/versitygw/s3err"
 )
 
-var ErrAccessDenied = errors.New("access denied")
+var ErrAccessDenied = s3err.GetAPIError(s3err.ErrAccessDenied)
 
 type policyErr string
 

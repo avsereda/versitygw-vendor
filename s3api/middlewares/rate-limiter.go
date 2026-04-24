@@ -17,34 +17,13 @@ package middlewares
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/versity/versitygw/metrics"
-	"github.com/versity/versitygw/s3err"
 	"github.com/versity/versitygw/s3log"
-	"golang.org/x/sync/semaphore"
 )
 
 // RateLimiter hard-limits the number of in-flight requests.
 // If the limit is reached, an immediate SlowDown error is returned
 func RateLimiter(limit int, mm metrics.Manager, logger s3log.AuditLogger) fiber.Handler {
-	sem := semaphore.NewWeighted(int64(limit))
-
 	return func(ctx *fiber.Ctx) error {
-		if !sem.TryAcquire(1) {
-			// limit reached
-			err := s3err.GetAPIError(s3err.ErrSlowDown)
-
-			if mm != nil {
-				mm.Send(ctx, err, metrics.ActionUndetected, 0, 0)
-			}
-			if logger != nil {
-				logger.Log(ctx, err, ctx.Body(), s3log.LogMeta{
-					Action: metrics.ActionUndetected,
-				})
-			}
-
-			ctx.Status(err.HTTPStatusCode)
-			return ctx.Send(s3err.GetAPIErrorResponse(err, "", "", ""))
-		}
-		defer sem.Release(1)
 		return ctx.Next()
 	}
 }

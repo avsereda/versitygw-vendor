@@ -601,18 +601,7 @@ func EvaluatePreconditions(etag string, modTime time.Time, preconditions PreCond
 	return nil
 }
 
-// EvaluateMatchPreconditions evaluates if-match and if-none-match preconditions
-func EvaluateMatchPreconditions(etag string, ifMatch, ifNoneMatch *string) error {
-	etag = strings.Trim(etag, `"`)
-	if ifMatch != nil && *ifMatch != etag {
-		return errPreconditionFailed
-	}
-	if ifNoneMatch != nil && *ifNoneMatch == etag {
-		return errPreconditionFailed
-	}
 
-	return nil
-}
 
 // EvaluateObjectPutPreconditions evaluates if-match and if-none-match preconditions
 // for object PUT(PutObject, CompleteMultipartUpload) actions

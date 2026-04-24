@@ -17,7 +17,6 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/versity/versitygw/s3err"
 )
@@ -112,90 +111,21 @@ var (
 )
 
 type Opts struct {
-	RootAccount                 Account
-	Dir                         string
-	LDAPServerURL               string
-	LDAPBindDN                  string
-	LDAPPassword                string
-	LDAPQueryBase               string
-	LDAPObjClasses              string
-	LDAPAccessAtr               string
-	LDAPSecretAtr               string
-	LDAPRoleAtr                 string
-	LDAPUserIdAtr               string
-	LDAPGroupIdAtr              string
-	LDAPProjectIdAtr            string
-	LDAPTLSSkipVerify           bool
-	VaultEndpointURL            string
-	VaultNamespace              string
-	VaultSecretStoragePath      string
-	VaultSecretStorageNamespace string
-	VaultAuthMethod             string
-	VaultAuthNamespace          string
-	VaultMountPath              string
-	VaultRootToken              string
-	VaultRoleId                 string
-	VaultRoleSecret             string
-	VaultServerCert             string
-	VaultClientCert             string
-	VaultClientCertKey          string
-	S3Access                    string
-	S3Secret                    string
-	S3Region                    string
-	S3Bucket                    string
-	S3Endpoint                  string
-	S3DisableSSlVerfiy          bool
-	CacheDisable                bool
-	CacheTTL                    int
-	CachePrune                  int
-	IpaHost                     string
-	IpaVaultName                string
-	IpaUser                     string
-	IpaPassword                 string
-	IpaInsecure                 bool
+	RootAccount Account
+	Dir         string
 }
 
 func New(o *Opts) (IAMService, error) {
-	var svc IAMService
-	var err error
-
 	switch {
 	case o.Dir != "":
-		svc, err = NewInternal(o.RootAccount, o.Dir)
+		svc, err := NewInternal(o.RootAccount, o.Dir)
+		if err != nil {
+			return nil, err
+		}
 		fmt.Printf("initializing internal IAM with %q\n", o.Dir)
-	case o.LDAPServerURL != "":
-		svc, err = NewLDAPService(o.RootAccount, o.LDAPServerURL, o.LDAPBindDN, o.LDAPPassword,
-			o.LDAPQueryBase, o.LDAPAccessAtr, o.LDAPSecretAtr, o.LDAPRoleAtr, o.LDAPUserIdAtr,
-			o.LDAPGroupIdAtr, o.LDAPProjectIdAtr, o.LDAPObjClasses, o.LDAPTLSSkipVerify)
-		fmt.Printf("initializing LDAP IAM with %q\n", o.LDAPServerURL)
-	case o.S3Endpoint != "":
-		svc, err = NewS3(o.RootAccount, o.S3Access, o.S3Secret, o.S3Region, o.S3Bucket,
-			o.S3Endpoint, o.S3DisableSSlVerfiy)
-		fmt.Printf("initializing S3 IAM with '%v/%v'\n",
-			o.S3Endpoint, o.S3Bucket)
-	case o.VaultEndpointURL != "":
-		svc, err = NewVaultIAMService(o.RootAccount, o.VaultEndpointURL, o.VaultNamespace, o.VaultSecretStoragePath, o.VaultSecretStorageNamespace,
-			o.VaultAuthMethod, o.VaultAuthNamespace, o.VaultMountPath, o.VaultRootToken, o.VaultRoleId, o.VaultRoleSecret,
-			o.VaultServerCert, o.VaultClientCert, o.VaultClientCertKey)
-		fmt.Printf("initializing Vault IAM with %q\n", o.VaultEndpointURL)
-	case o.IpaHost != "":
-		svc, err = NewIpaIAMService(o.RootAccount, o.IpaHost, o.IpaVaultName, o.IpaUser, o.IpaPassword, o.IpaInsecure)
-		fmt.Printf("initializing IPA IAM with %q\n", o.IpaHost)
+		return svc, nil
 	default:
-		// if no iam options selected, default to the single user mode
 		fmt.Println("No IAM service configured, enabling single account mode")
 		return NewIAMServiceSingle(o.RootAccount), nil
 	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	if o.CacheDisable {
-		return svc, nil
-	}
-
-	return NewCache(svc,
-		time.Duration(o.CacheTTL)*time.Second,
-		time.Duration(o.CachePrune)*time.Second), nil
 }

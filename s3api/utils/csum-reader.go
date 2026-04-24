@@ -154,10 +154,6 @@ func (hr *HashReader) Read(p []byte) (int, error) {
 	return n, readerr
 }
 
-func (hr *HashReader) SetReader(r io.Reader) {
-	hr.r = r
-}
-
 // Sum returns the checksum hash of the data read so far
 func (hr *HashReader) Sum() string {
 	switch hr.hashType {

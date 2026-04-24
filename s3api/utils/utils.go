@@ -315,16 +315,7 @@ func ParseMaxLimiter(limiter string, lt LimiterType) (int32, error) {
 	return int32(num), nil
 }
 
-type CustomHeader struct {
-	Key   string
-	Value string
-}
 
-func SetResponseHeaders(ctx *fiber.Ctx, headers []CustomHeader) {
-	for _, header := range headers {
-		ctx.Set(header.Key, header.Value)
-	}
-}
 
 // Streams the response body by chunks
 func StreamResponseBody(ctx *fiber.Ctx, rdr io.ReadCloser, bodysize int) {

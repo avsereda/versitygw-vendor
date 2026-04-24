@@ -1,0 +1,176 @@
+# filippo.io/edwards25519 v1.1.0
+## explicit; go 1.20
+filippo.io/edwards25519
+filippo.io/edwards25519/field
+# github.com/DataDog/datadog-go/v5 v5.8.3
+## explicit; go 1.13
+github.com/DataDog/datadog-go/v5/statsd
+# github.com/Microsoft/go-winio v0.5.0
+## explicit; go 1.12
+github.com/Microsoft/go-winio
+github.com/Microsoft/go-winio/pkg/guid
+# github.com/andybalholm/brotli v1.2.1
+## explicit; go 1.22
+github.com/andybalholm/brotli
+github.com/andybalholm/brotli/flate
+github.com/andybalholm/brotli/matchfinder
+# github.com/aws/aws-sdk-go-v2 v1.41.6
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/aws
+github.com/aws/aws-sdk-go-v2/aws/arn
+github.com/aws/aws-sdk-go-v2/aws/defaults
+github.com/aws/aws-sdk-go-v2/aws/middleware
+github.com/aws/aws-sdk-go-v2/aws/protocol/xml
+github.com/aws/aws-sdk-go-v2/aws/ratelimit
+github.com/aws/aws-sdk-go-v2/aws/retry
+github.com/aws/aws-sdk-go-v2/aws/signer/internal/v4
+github.com/aws/aws-sdk-go-v2/aws/signer/v4
+github.com/aws/aws-sdk-go-v2/aws/transport/http
+github.com/aws/aws-sdk-go-v2/internal/auth
+github.com/aws/aws-sdk-go-v2/internal/auth/smithy
+github.com/aws/aws-sdk-go-v2/internal/context
+github.com/aws/aws-sdk-go-v2/internal/endpoints
+github.com/aws/aws-sdk-go-v2/internal/endpoints/awsrulesfn
+github.com/aws/aws-sdk-go-v2/internal/rand
+github.com/aws/aws-sdk-go-v2/internal/sdk
+github.com/aws/aws-sdk-go-v2/internal/strings
+github.com/aws/aws-sdk-go-v2/internal/sync/singleflight
+github.com/aws/aws-sdk-go-v2/internal/timeconv
+# github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.7.9
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream
+github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream/eventstreamapi
+# github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.22
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/internal/configsources
+# github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.22
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/internal/endpoints/v2
+# github.com/aws/aws-sdk-go-v2/internal/v4a v1.4.23
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/internal/v4a
+github.com/aws/aws-sdk-go-v2/internal/v4a/internal/crypto
+github.com/aws/aws-sdk-go-v2/internal/v4a/internal/v4
+# github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.8
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding
+# github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.9.14
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/service/internal/checksum
+# github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.22
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/service/internal/presigned-url
+# github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.19.22
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/service/internal/s3shared
+github.com/aws/aws-sdk-go-v2/service/internal/s3shared/arn
+github.com/aws/aws-sdk-go-v2/service/internal/s3shared/config
+# github.com/aws/aws-sdk-go-v2/service/s3 v1.100.0
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/service/s3
+github.com/aws/aws-sdk-go-v2/service/s3/internal/arn
+github.com/aws/aws-sdk-go-v2/service/s3/internal/customizations
+github.com/aws/aws-sdk-go-v2/service/s3/internal/endpoints
+github.com/aws/aws-sdk-go-v2/service/s3/types
+# github.com/aws/smithy-go v1.25.1
+## explicit; go 1.24
+github.com/aws/smithy-go
+github.com/aws/smithy-go/auth
+github.com/aws/smithy-go/auth/bearer
+github.com/aws/smithy-go/container/private/cache
+github.com/aws/smithy-go/container/private/cache/lru
+github.com/aws/smithy-go/context
+github.com/aws/smithy-go/document
+github.com/aws/smithy-go/encoding
+github.com/aws/smithy-go/encoding/httpbinding
+github.com/aws/smithy-go/encoding/xml
+github.com/aws/smithy-go/endpoints
+github.com/aws/smithy-go/endpoints/private/rulesfn
+github.com/aws/smithy-go/internal/sync/singleflight
+github.com/aws/smithy-go/io
+github.com/aws/smithy-go/logging
+github.com/aws/smithy-go/metrics
+github.com/aws/smithy-go/middleware
+github.com/aws/smithy-go/ptr
+github.com/aws/smithy-go/rand
+github.com/aws/smithy-go/sync
+github.com/aws/smithy-go/time
+github.com/aws/smithy-go/tracing
+github.com/aws/smithy-go/transport/http
+github.com/aws/smithy-go/transport/http/internal/io
+github.com/aws/smithy-go/waiter
+# github.com/cpuguy83/go-md2man/v2 v2.0.7
+## explicit; go 1.12
+github.com/cpuguy83/go-md2man/v2/md2man
+# github.com/go-sql-driver/mysql v1.9.3
+## explicit; go 1.21.0
+github.com/go-sql-driver/mysql
+# github.com/gofiber/fiber/v2 v2.52.13
+## explicit; go 1.20
+github.com/gofiber/fiber/v2
+github.com/gofiber/fiber/v2/internal/schema
+github.com/gofiber/fiber/v2/log
+github.com/gofiber/fiber/v2/middleware/filesystem
+github.com/gofiber/fiber/v2/middleware/logger
+github.com/gofiber/fiber/v2/middleware/recover
+github.com/gofiber/fiber/v2/utils
+# github.com/google/uuid v1.6.0
+## explicit
+github.com/google/uuid
+# github.com/klauspost/compress v1.18.5
+## explicit; go 1.24
+github.com/klauspost/compress
+github.com/klauspost/compress/flate
+github.com/klauspost/compress/fse
+github.com/klauspost/compress/gzip
+github.com/klauspost/compress/huff0
+github.com/klauspost/compress/internal/cpuinfo
+github.com/klauspost/compress/internal/le
+github.com/klauspost/compress/internal/snapref
+github.com/klauspost/compress/zlib
+github.com/klauspost/compress/zstd
+github.com/klauspost/compress/zstd/internal/xxhash
+# github.com/mattn/go-colorable v0.1.13
+## explicit; go 1.15
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.20
+## explicit; go 1.15
+github.com/mattn/go-isatty
+# github.com/mattn/go-runewidth v0.0.16
+## explicit; go 1.9
+github.com/mattn/go-runewidth
+# github.com/oklog/ulid/v2 v2.1.1
+## explicit; go 1.15
+github.com/oklog/ulid/v2
+# github.com/pkg/xattr v0.4.12
+## explicit; go 1.14
+github.com/pkg/xattr
+# github.com/rivo/uniseg v0.2.0
+## explicit; go 1.12
+github.com/rivo/uniseg
+# github.com/russross/blackfriday/v2 v2.1.0
+## explicit
+github.com/russross/blackfriday/v2
+# github.com/smira/go-statsd v1.3.4
+## explicit; go 1.20
+github.com/smira/go-statsd
+# github.com/urfave/cli/v2 v2.27.7
+## explicit; go 1.18
+github.com/urfave/cli/v2
+# github.com/valyala/bytebufferpool v1.0.0
+## explicit
+github.com/valyala/bytebufferpool
+# github.com/valyala/fasthttp v1.70.0
+## explicit; go 1.24.0
+github.com/valyala/fasthttp
+github.com/valyala/fasthttp/fasthttputil
+github.com/valyala/fasthttp/reuseport
+github.com/valyala/fasthttp/stackless
+github.com/valyala/fasthttp/tcplisten
+# github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1
+## explicit; go 1.15
+github.com/xrash/smetrics
+# golang.org/x/sys v0.41.0
+## explicit; go 1.24.0
+golang.org/x/sys/unix
+golang.org/x/sys/windows
